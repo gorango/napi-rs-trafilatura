@@ -1,5 +1,5 @@
 use crate::types::*;
-use rs_trafilatura::{ExtractResult, Metadata, Options, ImageData, page_type::PageType};
+use rs_trafilatura::{ExtractResult, Metadata, Options, ImageData, VideoData, AudioData, page_type::PageType};
 
 impl From<ExtractResult> for ExtractResultNapi {
     fn from(src: ExtractResult) -> Self {
@@ -10,6 +10,8 @@ impl From<ExtractResult> for ExtractResultNapi {
             comments_text: src.comments_text,
             comments_html: src.comments_html,
             images: src.images.into_iter().map(ImageDataNapi::from).collect(),
+            videos: src.videos.into_iter().map(VideoDataNapi::from).collect(),
+            audios: src.audio.into_iter().map(AudioDataNapi::from).collect(),
             metadata: MetadataNapi::from(src.metadata),
             classification_confidence: src.classification_confidence,
             extraction_quality: src.extraction_quality,
@@ -52,6 +54,29 @@ impl From<ImageData> for ImageDataNapi {
     }
 }
 
+impl From<VideoData> for VideoDataNapi {
+    fn from(src: VideoData) -> Self {
+        Self {
+            src: src.src,
+            filename: src.filename,
+            poster: src.poster,
+            caption: src.caption,
+            is_hero: src.is_hero,
+        }
+    }
+}
+
+impl From<AudioData> for AudioDataNapi {
+    fn from(src: AudioData) -> Self {
+        Self {
+            src: src.src,
+            filename: src.filename,
+            caption: src.caption,
+            is_hero: src.is_hero,
+        }
+    }
+}
+
 impl From<OptionsNapi> for Options {
     fn from(src: OptionsNapi) -> Self {
         let mut opts = Options::default();
@@ -59,6 +84,8 @@ impl From<OptionsNapi> for Options {
         if let Some(v) = src.include_comments { opts.include_comments = v; }
         if let Some(v) = src.include_tables { opts.include_tables = v; }
         if let Some(v) = src.include_images { opts.include_images = v; }
+        if let Some(v) = src.include_videos { opts.include_videos = v; }
+        if let Some(v) = src.include_audio { opts.include_audio = v; }
         if let Some(v) = src.include_links { opts.include_links = v; }
         if let Some(v) = src.favor_precision { opts.favor_precision = v; }
         if let Some(v) = src.favor_recall { opts.favor_recall = v; }

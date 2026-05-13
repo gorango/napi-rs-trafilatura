@@ -22,6 +22,10 @@ pub struct ExtractResultNapi {
 
     pub images: Vec<ImageDataNapi>,
 
+    pub videos: Vec<VideoDataNapi>,
+
+    pub audios: Vec<AudioDataNapi>,
+
     pub metadata: MetadataNapi,
 
     #[serde(rename = "classificationConfidence")]
@@ -74,6 +78,29 @@ pub struct ImageDataNapi {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[napi(object)]
+pub struct VideoDataNapi {
+    pub src: String,
+    pub filename: String,
+    pub poster: Option<String>,
+    pub caption: Option<String>,
+
+    #[serde(rename = "isHero")]
+    pub is_hero: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[napi(object)]
+pub struct AudioDataNapi {
+    pub src: String,
+    pub filename: String,
+    pub caption: Option<String>,
+
+    #[serde(rename = "isHero")]
+    pub is_hero: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[napi(object)]
 pub struct OptionsNapi {
     #[serde(rename = "includeComments")]
     pub include_comments: Option<bool>,
@@ -83,6 +110,12 @@ pub struct OptionsNapi {
 
     #[serde(rename = "includeImages")]
     pub include_images: Option<bool>,
+
+    #[serde(rename = "includeVideos")]
+    pub include_videos: Option<bool>,
+
+    #[serde(rename = "includeAudio")]
+    pub include_audio: Option<bool>,
 
     #[serde(rename = "includeLinks")]
     pub include_links: Option<bool>,
